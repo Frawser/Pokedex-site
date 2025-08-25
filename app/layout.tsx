@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${jaldi.variable} ${jersey.variable} antialiased`}
+        className={`${jaldi.variable} ${jersey.variable} antialiased min-h-screen`}
       >
         <header className="content-grid">
         </header>
