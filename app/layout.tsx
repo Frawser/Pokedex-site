@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
 import { Jaldi, Jersey_10 } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
 
 const jaldi = Jaldi({
   subsets: ["latin"],
   weight: "400",
-  variable: "--font-jaldi"
+  variable: "--font-jaldi",
 });
 
 const jersey = Jersey_10({
   subsets: ["latin"],
   weight: "400",
-  variable: "--font-jersey"
+  variable: "--font-jersey",
 });
 
 export const metadata: Metadata = {
@@ -26,11 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${jaldi.variable} ${jersey.variable} antialiased min-h-screen`}
-      >
-        <header className="content-grid">
-        </header>
+      <body className={`${jaldi.variable} ${jersey.variable} antialiased`}>
+        <header className="content-grid"></header>
+        <Navbar />
         {children}
       </body>
     </html>

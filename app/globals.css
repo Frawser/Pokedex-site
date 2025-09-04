@@ -20,13 +20,14 @@
 } */
 
 html, body {
-  height: 100%;
   margin: 0;
   padding: 0;
+  height: 100%; 
+  overscroll-behavior: none;
 }
 
 body {
-  background: var(--background);
+  background: var(--background) no-repeat center center fixed;
   color: var(--foreground);
   font-family: var(--font-jaldi), Arial, Helvetica, sans-serif;
 }

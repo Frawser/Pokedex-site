@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Featured from "@/components/Featured";
 import RandomPokemon from "@/components/RandomPokemon";
 
