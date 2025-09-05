@@ -1,6 +1,7 @@
 import { getFeaturedPokemon } from "@/lib/util";
 import Link from "next/link";
 import { typeColors } from "@/lib/util";
+import Image from "next/image";
 
 export default async function Featured() {
   const pokemons = await getFeaturedPokemon();
@@ -16,13 +17,13 @@ export default async function Featured() {
             const firstType = pokemon.types?.[0]?.type?.name || "normal";
 
             const hp = pokemon.stats.find(
-              (s: any) => s.stat.name === "hp"
+              (s) => s.stat.name === "hp"
             )?.base_stat;
             const attack = pokemon.stats.find(
-              (s: any) => s.stat.name === "attack"
+              (s) => s.stat.name === "attack"
             )?.base_stat;
             const defense = pokemon.stats.find(
-              (s: any) => s.stat.name === "defense"
+              (s) => s.stat.name === "defense"
             )?.base_stat;
 
             return (
@@ -33,10 +34,13 @@ export default async function Featured() {
                   <div
                     className={`w-40 h-40 flex items-center justify-center mb-3 border-4 ${typeColors[firstType].border} rounded-full`}
                   >
-                    <img
+                    <Image
                       src={pokemon.sprites.front_default}
                       alt={pokemon.name}
+                      width={120}
+                      height={120}
                       className="w-30 h-30 object-contain transition-transform duration-300 group-hover:scale-110"
+                      unoptimized={false}
                     />
                   </div>
 
@@ -45,7 +49,7 @@ export default async function Featured() {
                   </h2>
 
                   <div className="flex gap-2 mt-2 flex-wrap justify-center">
-                    {pokemon.types.map((t: any) => (
+                    {pokemon.types.map((t) => (
                       <span
                         key={t.type.name}
                         className={`px-3 py-1 text-xs font-semibold rounded-full text-white ${

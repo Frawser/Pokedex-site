@@ -6,7 +6,7 @@ export default function Home() {
     <main>
       <section className="flex flex-col items-center gap-4 p-14">
         <h1 className="text-center mt-10 text-8xl font-extrabold text-transparent bg-gradient-to-r from-purple-800 to-blue-800 [background-clip:text]">
-          Gotta catch 'em all!
+          Gotta catch &apos;em all!
         </h1>
         <p className="text-center text-white text-xl">
           Discover, search and explore the amazing world of Pokémon. Find

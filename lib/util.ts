@@ -1,10 +1,12 @@
+import { PokemonListItem, PokemonDetails } from "./interface";
+
 export async function getFeaturedPokemon() {
   const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1302");
   if (!res.ok) throw new Error("Failed to fetch Pokémon list");
 
   const data = await res.json();
 
-  const chosen: any[] = [];
+  const chosen: PokemonListItem[] = [];
   const usedIndexes = new Set<number>();
 
   while (chosen.length < 4) {
@@ -15,11 +17,11 @@ export async function getFeaturedPokemon() {
     }
   }
 
-  const pokemons = await Promise.all(
+  const pokemons: PokemonDetails[] = await Promise.all(
     chosen.map(async (pokemon) => {
       const res = await fetch(pokemon.url);
       if (!res.ok) throw new Error(`Failed to fetch ${pokemon.name}`);
-      return res.json();
+      return (await res.json()) as PokemonDetails;
     })
   );
 
@@ -47,8 +49,26 @@ export const typeColors: Record<string, { border: string; bg: string }> = {
   fairy: { border: "border-pink-300", bg: "bg-pink-300" },
 };
 
-export async function getPokemonList() {
-  const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1000");
-  const data = await res.json();
-  return data.results.map((p: { name: string }) => p.name);
+export async function getPokemonList(): Promise<PokemonDetails[]> {
+  const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=200");
+  if (!res.ok) throw new Error("Failed to fetch Pokémon list");
+
+  const data = (await res.json()) as { results: PokemonListItem[] };
+
+  const pokemons: PokemonDetails[] = await Promise.all(
+    data.results.map(async (p) => {
+      const detailsRes = await fetch(p.url);
+      if (!detailsRes.ok) throw new Error(`Failed to fetch ${p.name}`);
+      const detailsData = (await detailsRes.json()) as {
+        types: { type: { name: string } }[];
+      };
+
+      return {
+        name: p.name,
+        types: detailsData.types.map((t) => t.type.name),
+      };
+    })
+  );
+
+  return pokemons;
 }

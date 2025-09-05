@@ -1,22 +1,28 @@
 "use client";
+import { typeColors } from "@/lib/util";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { getPokemonList } from "@/lib/util";
 import Link from "next/link";
+import { PokemonDetails } from "@/lib/interface";
 
 export default function Search() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [pokemonList, setPokemonList] = useState<string[]>([]);
-  const [filtered, setFiltered] = useState<string[]>([]);
+  const [pokemonList, setPokemonList] = useState<PokemonDetails[]>([]);
+  const [filtered, setFiltered] = useState<PokemonDetails[]>([]);
 
   useEffect(() => {
     getPokemonList().then((list) => setPokemonList(list));
   }, []);
 
   const handleSearch = useDebouncedCallback((value: string) => {
-    const results = pokemonList.filter((name) =>
-      name.toLowerCase().includes(value.toLowerCase())
+    const results = pokemonList.filter(
+      (p) =>
+        p.name.toLowerCase().includes(value.toLowerCase()) ||
+        p.types.some((t) =>
+          String(t).toLowerCase().includes(value.toLowerCase())
+        )
     );
     setFiltered(results.slice(0, 10));
   }, 200);
@@ -58,14 +64,24 @@ export default function Search() {
             />
 
             <ul className="mt-4 flex flex-col gap-2 max-h-80 overflow-y-auto">
-              {filtered.map((name) => (
-                <Link key={name} href={`/pokemon/${name}`}>
-                  <li
-                    className={`group bg-white dark:bg-gray-800 border-2 rounded-3xl shadow-md p-3 flex items-center gap-3 cursor-pointer hover:shadow-xl transition-all duration-200`}
-                  >
+              {filtered.map((p) => (
+                <Link key={p.name} href={`/pokemon/${p.name}`}>
+                  <li className="group bg-white dark:bg-gray-800 border-2 rounded-3xl shadow-md p-3 flex flex-col cursor-pointer hover:shadow-xl transition-all duration-200">
                     <span className="capitalize text-gray-800 dark:text-gray-100 font-semibold">
-                      {name}
+                      {p.name}
                     </span>
+                    <div className="flex gap-2 mt-1">
+                      {p.types.map((type) => (
+                        <span
+                          key={String(type)}
+                          className={`px-2 py-1 text-xs rounded-lg text-white ${
+                            typeColors[String(type)]?.bg || "bg-gray-400"
+                          }`}
+                        >
+                          {String(type)}
+                        </span>
+                      ))}
+                    </div>
                   </li>
                 </Link>
               ))}
@@ -73,7 +89,7 @@ export default function Search() {
 
             <button
               onClick={() => setIsOpen(false)}
-              className="mt-2 text-sm text-gray-500 hover:underline capitalize text-gray-800 dark:text-gray-100 font-semibold"
+              className="mt-2 text-sm hover:underline capitalize text-gray-800 dark:text-gray-100 font-semibold"
             >
               Close
             </button>
